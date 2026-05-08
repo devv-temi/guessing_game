@@ -5,25 +5,33 @@ use std::io;
 fn main() {
     println!("Guess the number!");
 
-    let secret_number = rand::thread_rng().gen_range(1..=100);
+    let secret_number = rand::thread_rng().gen_range(1..=50);
 
-    println!("Please input your guess.");
+    loop {
+        println!("Please input your guess.");
 
-    let mut guess = String::new();
+        let mut guess = String::new();
 
-    let guess
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
 
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
 
-    println!("You guessed: {guess}");
+        println!("You guessed: {guess}");
 
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("too small!"),
-        Ordering::Greater => println!("too big!"),
-        Ordering::Equal => println!("you winn!"),
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("your guess is too small!"),
+            Ordering::Greater => println!("your guess is too big!"),
+            Ordering::Equal => {
+                println!("your guess is you winn!");
+                break;
+            }
+        }
+
+        // println!("The secret number is: {secret_number}");
     }
-
-    println!("The secret number is: {secret_number}");
 }
